@@ -19,9 +19,10 @@ export async function POST(request) {
     const formData = await request.formData();
     const title = formData.get("title");
     const designation = formData.get("designation");
+    const subDesignation = formData.get("subDesignation");
     const file = formData.get("file");
 
-    if (!title || !designation || !file) {
+    if (!title || !designation || !subDesignation || !file) {
       return NextResponse.json({ message: "All fields are required" }, { status: 400 });
     }
 
@@ -40,8 +41,8 @@ export async function POST(request) {
     const fileUrl = `/uploads/${filename}`;
 
     const [result] = await pool.query(
-      "INSERT INTO managements (title, designation, file_url) VALUES (?, ?, ?)",
-      [title, designation, fileUrl]
+      "INSERT INTO managements (title, designation, sub_designation, file_url) VALUES (?, ?, ?, ?)",
+      [title, designation, subDesignation, fileUrl]
     );
 
     return NextResponse.json({
@@ -50,6 +51,7 @@ export async function POST(request) {
         id: result.insertId,
         title,
         designation,
+        subDesignation,
         fileUrl,
       },
     });

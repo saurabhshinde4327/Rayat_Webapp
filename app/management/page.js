@@ -7,6 +7,19 @@ import Image from "next/image";
 import Header from "../components/Header";
 import Link from "next/link";
 
+const designationOrder = [
+  "President",
+  "Vice President ",
+  "Representative",
+  "Administrator",
+  "Managing Council",
+  "Invited Members",
+  "Regional Officer",
+  "Assistant Regional Officer",
+  
+  // इथे तुमच्या हवे त्या क्रमाने designation लिहा
+];
+
 export default function Organization() {
   const [managementData, setManagementData] = useState([]);
   const [tabs, setTabs] = useState([]);
@@ -16,18 +29,26 @@ export default function Organization() {
     const fetchData = async () => {
       const res = await fetch("/api/addManagements");
       const data = await res.json();
-
       setManagementData(data.managements || []);
-
       // Extract unique designations as tabs
-      const designations = [...new Set(data.managements.map(m => m.designation))];
+      let designations = [...new Set(data.managements.map(m => m.designation))];
+      designations = designations.sort((a, b) => {
+        const indexA = designationOrder.findIndex(
+          (d) => d.trim().toLowerCase() === a.trim().toLowerCase()
+        );
+        const indexB = designationOrder.findIndex(
+          (d) => d.trim().toLowerCase() === b.trim().toLowerCase()
+        );
+        if (indexA === -1 && indexB === -1) return 0; // no alpha fallback
+        if (indexA === -1) return 1;
+        if (indexB === -1) return -1;
+        return indexA - indexB;
+      });
       setTabs(designations);
-
       if (designations.length > 0) {
         setActiveTab(designations[0]); // Set first tab active by default
       }
     };
-
     fetchData();
   }, []);
 
@@ -103,7 +124,9 @@ export default function Organization() {
                   <h3 className="mt-4 text-md sm:text-lg font-bold text-teal-900">
                     {member.title}
                   </h3>
-                  <p className="text-gray-600">{member.designation}</p>
+                  {member.sub_designation && (
+                    <p className="text-gray-600">{member.sub_designation}</p>
+                  )}
                 </div>
               ))}
           </div>

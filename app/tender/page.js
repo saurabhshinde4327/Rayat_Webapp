@@ -16,7 +16,7 @@ export default function TendersPage() {
       try {
         const res = await fetch("/api/getTenders");
         const data = await res.json();
-        setTenders(data.tenders); // ✅ corrected to match API response structure
+        setTenders(data.tenders);
       } catch (error) {
         console.error("Error fetching tenders:", error);
       }
@@ -61,15 +61,46 @@ export default function TendersPage() {
       {/* Main Content */}
       <main className="container mx-auto px-6 py-16">
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-6">
-          e-TENDER NOTICE <br /> Rayat Shikshan Sanstha’s
+          e-TENDER NOTICE <br /> Rayat Shikshan Sanstha&#39;s
         </h2>
 
         <p className="text-lg text-gray-700 text-justify mb-8">
-          Tenders are invited from ISO Certified branded companies through e-Tendering process. Following items will be purchased through e-tender for our branches in Maharashtra State.
+          Rayat Shikshan Sanstha has branches spread across 16 districts, 15 in Maharashtra and 1 in Karnataka. The head office of the organization is located in Satara. 05 divisional offices are located in 05 different districts. 1. Central Division, Satara, 2. North Division, Ahilyanagar, 3. South Division, Sangli, 4. West Division, Pune, 5. Raigad Division, Panvel.
         </p>
+
+        {/* ONLINE TENDERS LINK */}
+        <h3 className="text-2xl font-semibold text-gray-700 mb-4">
+          Online Tenders - Portal -{" "}
+          <a
+            href="https://edumart.sets.co.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-700 underline"
+          >
+           https://edumart.sets.co.in
+          </a>
+        </h3>
+
+        <p className="text-lg text-gray-700 text-justify">
+          The materials required by the organization&#39;s branches are procured through tender method and dealers are selected through Rate Contract. For this, an online e-tender process is implemented. All e-tenders of the organization are published on the portal:&nbsp;
+          <a
+            href="https://edumart.sets.co.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-700 underline"
+          >
+           https://edumart.sets.co.in
+          </a>
+          <strong>&nbsp; from time to time</strong>.
+        </p>
+        <br />
 
         {/* OFFLINE TENDERS TABLE */}
         <h3 className="text-2xl font-semibold text-gray-700 mb-4">Offline Tenders</h3>
+        <p>
+          Tenders whose value is less than 5 lakhs are published offline by giving advertisement in the newspaper. All such tenders documents are placed below for download.
+        </p>
+        <br />
         <div className="overflow-x-auto shadow border border-gray-300 rounded-lg mb-12">
           <table className="w-full table-auto text-left text-gray-800">
             <thead className="bg-gray-200">
@@ -77,7 +108,7 @@ export default function TendersPage() {
                 <th className="px-4 py-3 border">Sr. No</th>
                 <th className="px-4 py-3 border">Tender Name</th>
                 <th className="px-4 py-3 border">Date</th>
-                <th className="px-4 py-3 border">Document</th>
+                <th className="px-4 py-3 border">View Tender Document</th>
               </tr>
             </thead>
             <tbody>
@@ -94,14 +125,22 @@ export default function TendersPage() {
                       })}
                     </td>
                     <td className="px-4 py-2 border">
-                      <a
-                        href={`https://103.134.111.2:8006${tender.file_path}`} // ✅ full URL to PDF
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 underline"
-                      >
-                        View Document
-                      </a>
+                      <div className="flex space-x-2">
+                        <Link
+                          href={`/viewTender/${tender.id}`}
+                          className="text-blue-600 underline hover:text-blue-800"
+                        >
+                          View Details
+                        </Link>
+                        <a
+                          href={tender.file_path}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-green-600 underline hover:text-green-800"
+                        >
+                          Download
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -115,20 +154,6 @@ export default function TendersPage() {
             </tbody>
           </table>
         </div>
-
-        {/* ONLINE TENDERS LINK */}
-        <h3 className="text-2xl font-semibold text-gray-700 mb-4">Online Tenders</h3>
-        <p className="text-lg text-gray-700 text-justify">
-          The detailed information of online tenders such as tender fees, terms, conditions, technical specifications, and approximate quantity of items are available on our portal:&nbsp;
-          <a
-            href="http://rayat.sets.co.in"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-700 underline"
-          >
-            http://rayat.sets.co.in
-          </a>. Tender must be submitted online on this web portal up to <strong>30/09/2021 @ 4.00 pm</strong>.
-        </p>
       </main>
 
       <Footer />

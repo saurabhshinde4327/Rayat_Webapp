@@ -55,24 +55,26 @@ const NewsSection = ({ title, items = [], link, openModal }) => {
 
       {/* Tailwind CSS & Hover Stop Animation */}
       <style jsx>{`
-        .scroll-container {
-          position: relative;
-          height: 12rem;
-          overflow: hidden;
-        }
-        .scroll-content {
-          display: flex;
-          flex-direction: column;
-          animation: scrollUp 10s linear infinite;
-        }
-        .scroll-container:hover .scroll-content {
-          animation-play-state: paused; /* Stops animation on hover */
-        }
-        @keyframes scrollUp {
-          from { transform: translateY(0); }
-          to { transform: translateY(-50%); } /* Scroll smoothly */
-        }
-      `}</style>
+  .scroll-container {
+    position: relative;
+    height: 12rem;
+    overflow: hidden;
+  }
+  .scroll-content {
+    display: flex;
+    flex-direction: column;
+    /* 👇 इथे बदल करा */
+    animation: scrollUp 25s linear infinite;
+  }
+  .scroll-container:hover .scroll-content {
+    animation-play-state: paused;
+  }
+  @keyframes scrollUp {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50%); }
+  }
+`}</style>
+
     </div>
   );
 };

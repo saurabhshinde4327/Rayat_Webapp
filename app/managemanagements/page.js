@@ -10,6 +10,8 @@ import Topbar from "../components/Topbar";
 export default function ManageManagements() {
   const router = useRouter();
   const [managementList, setManagementList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const entriesPerPage = 15;
 
   const fetchManagements = async () => {
     try {
@@ -20,7 +22,7 @@ export default function ManageManagements() {
       console.error("Failed to fetch managements:", error);
     }
   };
-
+  
   useEffect(() => {
     fetchManagements();
   }, []);
@@ -41,7 +43,6 @@ export default function ManageManagements() {
         const response = await fetch(`/api/deleteManagement?id=${id}`, {
           method: "DELETE",
         });
-
         if (response.ok) {
           setManagementList(managementList.filter((item) => item.id !== id));
           Swal.fire("Deleted!", "The entry has been deleted.", "success");
@@ -54,6 +55,12 @@ export default function ManageManagements() {
       }
     }
   };
+  
+  // Pagination calculations
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentEntries = managementList.slice(indexOfFirstEntry, indexOfLastEntry);
+  const totalPages = Math.ceil(managementList.length / entriesPerPage);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -96,30 +103,19 @@ export default function ManageManagements() {
               <thead>
                 <tr className="bg-gray-200 text-center">
                   <th className="border border-gray-300 px-4 py-2">Title</th>
-                  <th className="border border-gray-300 px-4 py-2">Designation</th>
-                  <th className="border border-gray-300 px-4 py-2">File</th>
+                  <th className="border border-gray-300 px-4 py-2">Sub Designation</th>
                   <th className="border border-gray-300 px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {managementList.length > 0 ? (
-                  managementList.map((item) => (
+                {currentEntries.length > 0 ? (
+                  currentEntries.map((item) => (
                     <tr key={item.id} className="text-center">
                       <td className="border border-gray-300 px-4 py-2">{item.title}</td>
-                      <td className="border border-gray-300 px-4 py-2">{item.designation}</td>
-                      <td className="border border-gray-300 px-4 py-2">
-                        <a
-                          href={`/uploads/${item.file}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
-                        >
-                          View
-                        </a>
-                      </td>
+                      <td className="border border-gray-300 px-4 py-2">{item.sub_designation}</td>
                       <td className="border border-gray-300 px-4 py-2 flex justify-center gap-4">
                         <a
-                          href={`/uploads/${item.file}`}
+                          href={item.file_url}
                           target="_blank"
                           title="View File"
                           className="text-green-600 hover:text-green-800"
@@ -138,13 +134,32 @@ export default function ManageManagements() {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" className="text-center py-4 text-gray-500">
+                    <td colSpan="3" className="text-center py-4 text-gray-500">
                       No management entries available.
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
+
+            {/* Pagination Buttons */}
+            <div className="flex justify-center items-center mt-4 space-x-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="bg-gray-300 rounded px-4 py-2 disabled:opacity-50"
+              >
+                Prev
+              </button>
+              <span>{currentPage} / {totalPages}</span>
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="bg-gray-300 rounded px-4 py-2 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </main>
       </div>

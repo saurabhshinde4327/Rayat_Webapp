@@ -26,6 +26,10 @@ export default function ManageTenders() {
     fetchTenders();
   }, []);
 
+  const handleViewFile = (filePath) => {
+    window.open(filePath, "_blank");
+  };
+
   const deleteTender = async (id) => {
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -87,41 +91,56 @@ export default function ManageTenders() {
         <main className="flex-1 p-8 space-y-6">
           <div className="bg-white p-6 rounded-lg shadow-lg">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">Tenders List</h2>
-            <table className="w-full border-collapse border border-gray-300 text-sm">
+            <table className="w-full border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="border border-gray-300 px-4 py-2 text-left">Title</th>
-                  <th className="border border-gray-300 px-4 py-2 text-center">Actions</th>
+                  <th className="border border-gray-300 px-4 py-2">Title</th>
+                  <th className="border border-gray-300 px-4 py-2">File</th>
+                  <th className="border border-gray-300 px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {tenderList.length > 0 ? (
                   tenderList.map((tender) => (
-                    <tr key={tender.id} className="hover:bg-gray-50 transition">
+                    <tr key={tender.id} className="text-center">
                       <td className="border border-gray-300 px-4 py-2">{tender.title}</td>
                       <td className="border border-gray-300 px-4 py-2">
-                        <div className="flex justify-center space-x-6">
-                          <button
-                            onClick={() => router.push(`/viewNotice/${tender.id}`)}
-                            title="View Tender"
-                            className="text-blue-600 hover:text-blue-800 transition-transform hover:scale-110"
+                        {tender.file_path ? (
+                          <a
+                            href={tender.file_path}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline"
                           >
-                            <Eye className="w-7 h-7" />
-                          </button>
+                            View File
+                          </a>
+                        ) : (
+                          "-"
+                        )}
+                      </td>
+                      <td className="border border-gray-300 px-4 py-2 flex justify-center gap-4">
+                        {tender.file_path && (
                           <button
-                            onClick={() => deleteTender(tender.id)}
-                            title="Delete Tender"
-                            className="text-red-600 hover:text-red-800 transition-transform hover:scale-110"
+                            onClick={() => handleViewFile(tender.file_path)}
+                            className="text-green-500 hover:text-green-700"
+                            title="View File"
                           >
-                            <Trash2 className="w-7 h-7" />
+                            <Eye size={30} />
                           </button>
-                        </div>
+                        )}
+                        <button
+                          onClick={() => deleteTender(tender.id)}
+                          className="text-red-500 hover:text-red-700"
+                          title="Delete"
+                        >
+                          <Trash2 size={30} />
+                        </button>
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="2" className="text-center py-4 text-gray-500">
+                    <td colSpan="3" className="text-center py-4 text-gray-500">
                       No Tenders available.
                     </td>
                   </tr>

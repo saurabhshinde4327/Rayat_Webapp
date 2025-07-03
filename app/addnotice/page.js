@@ -40,7 +40,7 @@ export default function AddNotice() {
         setTitle("");
         setDate("");
         setFile(null);
-        setTimeout(() => router.push("/managenotices"), 1500);
+        setTimeout(() => router.push("/managenotices?refresh=1"), 1500);
       }
     } catch (error) {
       setMessage("Error uploading notice.");

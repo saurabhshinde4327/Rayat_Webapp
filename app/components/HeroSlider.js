@@ -14,19 +14,18 @@ const HeroSlider = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await fetch("/api/getSliderImages"); // Update this URL based on your API route
+        const response = await fetch("/api/getSliderImages"); // आपल्या API रूटनुसार अपडेट करा
         const data = await response.json();
         setImages(data);
       } catch (error) {
         console.error("Error fetching slider images:", error);
       }
     };
-
     fetchImages();
   }, []);
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full min-h-[450px] md:h-[650px] lg:h-[700px] flex items-center justify-center overflow-hidden">
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={0}
@@ -40,47 +39,22 @@ const HeroSlider = () => {
         {images.length > 0 ? (
           images.map((image, index) => (
             <SwiperSlide key={image.id} className="relative w-full h-full">
-              <div className="relative w-full h-full">
+              <div className="relative w-full h-[350px] md:h-[600px] lg:h-[650px] before:absolute before:inset-0 before:bg-white/10">
                 <Image
                   src={image.file_path}
                   alt={`Slide ${index + 1}`}
-                  fill
-                  className="object-cover w-full h-full brightness-110 contrast-105"
+                  layout="fill"
+                  objectFit="cover"
+                  className="brightness-110 contrast-105"
                   priority={index === 0}
                 />
               </div>
             </SwiperSlide>
           ))
         ) : (
-          <p className="text-center text-gray-500 p-4">Loading...</p>
+          <p className="text-center text-white">Loading...</p>
         )}
       </Swiper>
-
-      <style jsx global>{`
-        .swiper-button-prev,
-        .swiper-button-next {
-          color: white;
-          background: rgba(0, 0, 0, 0.3);
-          padding: 8px;
-          border-radius: 9999px;
-          transition: background 0.3s ease;
-        }
-
-        .swiper-button-prev:hover,
-        .swiper-button-next:hover {
-          background: rgba(0, 0, 0, 0.5);
-        }
-
-        .swiper-pagination-bullet {
-          background: white;
-          opacity: 0.7;
-        }
-
-        .swiper-pagination-bullet-active {
-          background: #00b4d8;
-          opacity: 1;
-        }
-      `}</style>
     </div>
   );
 };

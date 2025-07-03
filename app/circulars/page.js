@@ -12,6 +12,8 @@ import Header from "../components/Header";
 function CircularsContent() {
   const [searchTerm, setSearchTerm] = useState("");
   const [circulars, setCirculars] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const circularsPerPage = 15;
 
   useEffect(() => {
     async function fetchCirculars() {
@@ -30,11 +32,18 @@ function CircularsContent() {
     const year = new Date(circular.date).getFullYear().toString();
     const title = circular.title.toLowerCase();
     const search = searchTerm.toLowerCase();
-
-    return (
-      title.includes(search) || year.includes(search)
-    );
+    return title.includes(search) || year.includes(search);
   });
+
+  const indexOfLastCircular = currentPage * circularsPerPage;
+  const indexOfFirstCircular = indexOfLastCircular - circularsPerPage;
+  const currentCirculars = filteredCirculars.slice(indexOfFirstCircular, indexOfLastCircular);
+
+  const totalPages = Math.ceil(filteredCirculars.length / circularsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
@@ -42,7 +51,7 @@ function CircularsContent() {
       <Header />
       <Navbar />
 
-      {/* Hero Banner */}
+      {/* Banner */}
       <section className="relative w-full h-[100px]">
         <Image
           src="/images/academics-banner.jpg"
@@ -77,17 +86,15 @@ function CircularsContent() {
             type="text"
             placeholder="सर्च करा (कीवर्ड किंवा वर्ष) / Search by keyword or year"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1); // reset to first page on search
+            }}
             className="border px-4 py-2 rounded-md shadow-md text-gray-900 w-full max-w-md"
           />
         </div>
 
-        {/* Info */}
-        <div className="text-center mb-4 text-gray-600 text-sm">
-          Type keyword like &quot;exam&quot; or &quot;2024&quot; to search circulars.
-        </div>
-
-        {/* Circulars Table */}
+        {/* Table */}
         <div className="overflow-x-auto bg-white shadow-md rounded-lg p-6">
           <table className="w-full border-collapse border border-gray-200">
             <thead>
@@ -98,8 +105,8 @@ function CircularsContent() {
               </tr>
             </thead>
             <tbody>
-              {filteredCirculars.length > 0 ? (
-                filteredCirculars.map((circular) => (
+              {currentCirculars.length > 0 ? (
+                currentCirculars.map((circular) => (
                   <tr key={circular.id} className="border-b hover:bg-gray-100">
                     <td className="border border-gray-300 px-4 py-2">{circular.title}</td>
                     <td className="border border-gray-300 px-4 py-2">
@@ -119,13 +126,36 @@ function CircularsContent() {
               ) : (
                 <tr>
                   <td colSpan="3" className="text-center text-gray-600 py-4">
-                    No circulars found for &quot;{searchTerm}&quot;
-                  </td>
+  No circulars found for &quot;{searchTerm}&quot;
+</td>
+
                 </tr>
               )}
             </tbody>
           </table>
         </div>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-6 space-x-2">
+            {[...Array(totalPages)].map((_, index) => {
+              const pageNum = index + 1;
+              return (
+                <button
+                  key={pageNum}
+                  onClick={() => handlePageChange(pageNum)}
+                  className={`px-3 py-1 rounded-md border ${
+                    currentPage === pageNum
+                      ? "bg-teal-900 text-white"
+                      : "bg-white text-teal-900 border-teal-900 hover:bg-teal-100"
+                  }`}
+                >
+                  {pageNum}
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       <Footer />

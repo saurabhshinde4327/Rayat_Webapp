@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 export default function AddNews() {
   const [title, setTitle] = useState("");
   const [designation, setDesignation] = useState("");
+  const [subDesignation, setSubDesignation] = useState("");
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function AddNews() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !designation || !file) {
+    if (!title || !designation || !subDesignation || !file) {
       setMessage("All fields are required");
       return;
     }
@@ -23,6 +24,7 @@ export default function AddNews() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("designation", designation);
+    formData.append("subDesignation", subDesignation);
     formData.append("file", file);
 
     try {
@@ -37,6 +39,7 @@ export default function AddNews() {
       if (response.ok) {
         setTitle("");
         setDesignation("");
+        setSubDesignation("");
         setFile(null);
         router.push("/managemanagements");
       }
@@ -102,6 +105,17 @@ export default function AddNews() {
                   type="text"
                   value={designation}
                   onChange={(e) => setDesignation(e.target.value)}
+                  className="w-full p-2 border rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-gray-700">Sub Designation</label>
+                <input
+                  type="text"
+                  value={subDesignation}
+                  onChange={(e) => setSubDesignation(e.target.value)}
                   className="w-full p-2 border rounded"
                   required
                 />
