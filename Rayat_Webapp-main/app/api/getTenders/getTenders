@@ -1,0 +1,16 @@
+import { NextResponse } from "next/server";
+import pool from "@/lib/db"; // Use the shared pool
+
+// Handle GET request to fetch notices
+export async function GET() {
+  try {
+    const [rows] = await pool.execute("SELECT * FROM tenders ORDER BY date DESC");
+
+    return NextResponse.json(rows);
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to fetch notices", error: error.message },
+      { status: 500 }
+    );
+  }
+}

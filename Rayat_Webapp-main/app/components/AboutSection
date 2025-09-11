@@ -1,0 +1,40 @@
+import Link from "next/link";
+
+const AboutSection = () => {
+  return (
+    <section className="[background-color:hsl(184,50%,85%)]  py-16">
+      <div className="max-w-6xl mx-auto p-8 bg-white rounded-lg shadow-lg">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          {/* Content Section */}
+          <div className="flex-1 space-y-4 text-center md:text-left">
+            <h2 className="text-3xl md:text-3xl font-bold text-black">Rayat Shikshan Sanstha</h2>
+            {/* <div className="w-20 h- bg-red-600 mx-auto md:mx-0"></div> */}
+            <p className="text-gray-700 text-lg leading-relaxed">
+              A premier institution of education like the Rayat Shikshan Sanstha, known and honoured far and wide, not only at the national level, but at the global level too, needs no introduction. The institution itself is regarded as a noble mission, a noble cause, so earnestly and so endearingly pursued by its founder- father Karmaveer Bhaurao Patil, the educator of the educators and his legendary wife Sou. Laxmibai Patil with her exemplary sacrifices made to  turn the mission into a reality.
+            </p>
+            <p className="text-gray-700 text-lg leading-relaxed">
+              The Rayat Shikshan Sanstha is one of the leading educational institutions in Asia. The value of its contribution to education in general is enormously great as it has, from the very beginning, tried all its best to lay emphasis on the education of the down-trodden, the poor and the ignorant who really form the major bulk of society.
+            </p>
+            <Link href="/history" className="text-blue-600 font-bold inline-block hover:text-blue-800 transition">
+              Read More →
+            </Link>
+          </div>
+          
+          {/* Video Section */}
+          <div className="relative w-full md:w-96 h-56 overflow-hidden shadow-lg rounded-lg">
+            <iframe
+              className="w-full h-full rounded-lg"
+              src="https://www.youtube.com/embed/tiyIXgUqtEM"
+              title="Rayat Shikshan Sanstha Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default AboutSection;
